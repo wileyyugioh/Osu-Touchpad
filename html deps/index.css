@@ -1,0 +1,24 @@
+html, body
+{
+	margin: 0;
+	height: 100%;
+	overflow: hidden
+}
+
+html
+{
+	postion:fixed;
+	height:100%;
+	width:100%;
+}
+
+body
+{
+	height: 100%;
+}
+
+#TouchZone
+{
+	background-color:#FFDEFF;
+	height: 100%;
+}

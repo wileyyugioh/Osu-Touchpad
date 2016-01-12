@@ -38,14 +38,7 @@ socket.on('connect', function(ok)
 	socket.emit('SCREEN_DIMENSION', {W: screen.width, H: screen.height})
 
 	//on tap
-	mc.on("tap", function(ev)
-	{
-		setXY(ev);
-		sendXY();
-	})
-
-	//on drag
-	mc.on("pan", function(ev)
+	mc.on("tap pan", function(ev)
 	{
 		setXY(ev);
 		sendXY();

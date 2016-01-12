@@ -5,16 +5,27 @@ var html = require('http').Server(app);
 var io = require('socket.io')(html);
 var robot = require('robotjs');
 var ip = require('ip');
+var parser = require('ua-parser-js');
 
 //constants
 var HTML_PATH = "/index.html";
+var CSS_PATH = "/html deps/index.css"
 var HAMMER_PATH = "/lib/hammer.min.js";
+var NOBOUNCE_PATH = "/lib/inobounce.min.js";
 var HTML_JS_PATH = "/html deps/index.js";
 var PORT = 3000;
+var iOS_Y_COMP = 97;
+
+//global
+var ua_data;
 
 //lets load that html file
 app.get('/', function(req, res)
 {
+	//lets get that header
+	ua_data = parser(req.headers['user-agent']);
+	console.log("OS: " + ua_data.os.name);
+
 	//index.html
 	res.sendFile(path.join(__dirname + HTML_PATH) );
 })
@@ -29,6 +40,12 @@ app.get('/index.js', function(req, res)
 {
 	//index.js
 	res.sendFile(path.join(__dirname + HTML_JS_PATH) );
+})
+
+app.get('/index.css', function(req, res)
+{
+	//index.css
+	res.sendFile(path.join(__dirname + CSS_PATH) ); 
 })
 
 //sockest
@@ -69,6 +86,12 @@ io.on('connection', function(socket)
 	{
 		var touch_x = data.X;
 		var touch_y = data.Y;
+
+		//iOS returns negative? coordinates which is strange.
+		if(ua_data.os.name == 'iOS')
+		{
+			touch_y += iOS_Y_COMP;
+		}
 
 		//did I mention I <3 RobotJS?
 		robot.moveMouse(touch_x * w_ratio, touch_y * h_ratio);
