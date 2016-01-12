@@ -1,3 +1,8 @@
+//disables scroll?
+document.body.addEventListener('touchmove', function(event) {
+    event.preventDefault();
+});
+
 //requires hammer.js
 //requires sockets.io
 var socket = io();
@@ -37,7 +42,7 @@ socket.on('connect', function(ok)
 	//key is SCREEN_DIMENSION
 	socket.emit('SCREEN_DIMENSION', {W: screen.width, H: screen.height})
 
-	//on tap
+	//on tap or drag
 	mc.on("tap pan", function(ev)
 	{
 		setXY(ev);

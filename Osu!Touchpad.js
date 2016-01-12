@@ -76,9 +76,16 @@ io.on('connection', function(socket)
 
 		//lets calculate what the proportional thing would be on the server's screen
 		//I <3 RobotJS!
+		var screen_size = robot.getScreenSize();
 
-		w_ratio = (robot.getScreenSize().width / client_w);
-		h_ratio = (robot.getScreenSize().height / client_h);
+		w_ratio = (screen_size.width / client_w);
+		h_ratio = (screen_size.height / client_h);
+
+		console.log("Found a server screen width of " + screen_size.width);
+		console.log("Found a server screen height of " + screen_size.height)
+		console.log("Found a width ratio of " + w_ratio.toString() );
+		console.log("Found a height ratio of " + h_ratio.toString() );
+
 	})
 
 	//Key is TOUCHPOS
@@ -93,8 +100,14 @@ io.on('connection', function(socket)
 			touch_y += iOS_Y_COMP;
 		}
 
+		console.log("X: " + touch_x.toString() );
+		console.log("Y: " + touch_y.toString() );
+
 		//did I mention I <3 RobotJS?
 		robot.moveMouse(touch_x * w_ratio, touch_y * h_ratio);
+
+		console.log("Calc X: " + (touch_x * w_ratio).toString() );
+		console.log("Calc Y: " + (touch_y * h_ratio).toString() )
 	})
 })
 
