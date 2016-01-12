@@ -1,0 +1,26 @@
+{
+  "name": "osu!touchpad",
+  "version": "0.0.1",
+  "description": "Allows the use of tablet as a controller",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Wiley Y.",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.13.3",
+    "ip": "^1.1.0",
+    "robotjs": "^0.3.7",
+    "socket.io": "^1.4.4"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wileyyugioh/Osu-Touchpad.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wileyyugioh/Osu-Touchpad/issues"
+  },
+  "homepage": "https://github.com/wileyyugioh/Osu-Touchpad#readme"
+}
