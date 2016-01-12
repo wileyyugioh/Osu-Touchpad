@@ -2,7 +2,7 @@
   "name": "osu!touchpad",
   "version": "0.0.1",
   "description": "Allows the use of tablet as a controller",
-  "main": "index.js",
+  "main": "Osu!Touchpad.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/wileyyugioh/Osu-Touchpad/issues"
   },
-  "homepage": "https://github.com/wileyyugioh/Osu-Touchpad#readme"
+  "homepage": "https://github.com/wileyyugioh/Osu-Touchpad#readme",
+  "window": {
+    "toolbar": true
+  }
 }
