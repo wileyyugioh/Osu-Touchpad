@@ -8,31 +8,41 @@ This is the master branch of the repo. I plan to shift over to nw.js. Checkout t
 #NOTE B:
 You may have to compile ROBOTJS. Also, check out the dependencies it requires. https://github.com/octalmage/robotjs
 
-Extensively tested on an iPad air. 
+Extensively tested on an iPad air.
 
-#Dependencies
+#Installation
+
+Download the compiled code
+
+https://github.com/wileyyugioh/Osu-Touchpad/releases
+
+#Building
+
+##Dependencies
 
 npm
 
 nw.js (also known as node-webkit)
-nw-builder
 
-#Installation
+nw-gyp
+
+##More building
 ```
 npm install
+
+go use nw-gyp to rebuild robot.js: https://github.com/nwjs/nw-gyp
 
 nw
 
 ```
 
-also go use nw-builder to rebuild robot.js
-
 ##TODO
+
 video documentation!
-more devices!
-nicer packaging!
+
+test more devices!
+
 add QR Code support!
-Figure out how to disable rubber banding on safari!
 
 License: MIT
 
