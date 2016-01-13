@@ -10,6 +10,12 @@ You may have to compile ROBOTJS. Also, check out the dependencies it requires. h
 
 Extensively tested on an iPad air. 
 
+#Dependencies
+
+npm
+
+nw.js (also known as node-webkit)
+
 #Installation
 ```
 npm install
