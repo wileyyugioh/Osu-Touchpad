@@ -15,6 +15,7 @@ Extensively tested on an iPad air.
 npm
 
 nw.js (also known as node-webkit)
+nw-builder
 
 #Installation
 ```
@@ -23,6 +24,8 @@ npm install
 nw
 
 ```
+
+also go use nw-builder to rebuild robot.js
 
 ##TODO
 video documentation!
