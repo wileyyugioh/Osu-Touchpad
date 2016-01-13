@@ -1,3 +1,23 @@
+//This file is for nw.js version ONLY
+var LANDSCAPE = "LANDSCAPE";
+var PORTRAIT = "PORTRAIT";
+
+//defaults landscape
+var orientation = LANDSCAPE;
+var queue = [];
+function printToLog(data) {
+	queue.push(data);
+};
+
+module.exports = {
+	getQueue : function()
+				{
+					var temp = queue;
+					queue = [];
+					return temp;
+				}
+}
+
 //includes
 var app = require('express')();
 var path = require('path');
@@ -25,6 +45,7 @@ app.get('/', function(req, res)
 	//lets get that header
 	ua_data = parser(req.headers['user-agent']);
 	console.log("OS: " + ua_data.os.name);
+	printToLog("OS: " + ua_data.os.name);
 
 	//index.html
 	res.sendFile(path.join(__dirname + HTML_PATH) );
@@ -51,9 +72,12 @@ app.get('/index.css', function(req, res)
 //sockest
 io.on('connection', function(socket)
 {
+	//client w and h unlikely to change
 	var client_w, client_h;
+
 	var w_ratio, h_ratio;
 	console.log("A user connected");
+	printToLog("A user connected");
 
 	//send verification message
 	io.emit('verify', {});
@@ -62,6 +86,22 @@ io.on('connection', function(socket)
 	{
 		//verfify connection
 		console.log("Verfied connection to client!");
+		printToLog("Verfied connection to client!");
+	})
+
+	socket.on('ORIENTATION', function(data)
+	{
+		var orient = Math.floor(data.orientation);
+		if(orient == 90 || orient == -90)
+		{
+			orientation = LANDSCAPE;
+		}
+		else
+		{
+			orientation = PORTRAIT;
+		}
+
+		printToLog("Updated orientation to " + orientation);
 	})
 
 	//lets grab that screen width & height
@@ -71,21 +111,34 @@ io.on('connection', function(socket)
 		client_w = data.W;
 		client_h = data.H;
 
-		console.log("Found screen width of " + client_w.toString() );
-		console.log("Found screen height of " + client_h.toString() );
-
 		//lets calculate what the proportional thing would be on the server's screen
 		//I <3 RobotJS!
 		var screen_size = robot.getScreenSize();
 
-		w_ratio = (screen_size.width / client_w);
-		h_ratio = (screen_size.height / client_h);
+		//tested on ios
+		//assumes portrait mode
+		if(orientation == PORTRAIT)
+		{
+			w_ratio = (screen_size.width / client_w);
+			h_ratio = (screen_size.height / client_h);
+		}
+		else
+		{
+			//landscape
+			w_ratio = (screen_size.width / client_h);
+			h_ratio = (screen_size.height / client_w);
+		}
+
+		console.log("Found screen width of " + client_w.toString() );
+		printToLog("Found screen width of " + client_w.toString() );
+		console.log("Found screen height of " + client_h.toString() );
+		printToLog("Found screen height of " + client_h.toString() );
 
 		console.log("Found a server screen width of " + screen_size.width);
 		console.log("Found a server screen height of " + screen_size.height)
+
 		console.log("Found a width ratio of " + w_ratio.toString() );
 		console.log("Found a height ratio of " + h_ratio.toString() );
-
 	})
 
 	//Key is TOUCHPOS
@@ -100,20 +153,33 @@ io.on('connection', function(socket)
 			touch_y += iOS_Y_COMP;
 		}
 
-		console.log("X: " + touch_x.toString() );
-		console.log("Y: " + touch_y.toString() );
+		var move_x;
+		var move_y;
+
+		move_x = touch_x * w_ratio;
+		move_y = touch_y * h_ratio;
+
+		//console.log("X: " + touch_x.toString() );
+		//console.log("Y: " + touch_y.toString() );
 
 		//did I mention I <3 RobotJS?
-		robot.moveMouse(touch_x * w_ratio, touch_y * h_ratio);
+		robot.moveMouse(move_x, move_y);
 
-		console.log("Calc X: " + (touch_x * w_ratio).toString() );
-		console.log("Calc Y: " + (touch_y * h_ratio).toString() )
+		//console.log("Calc X: " + (touch_x * w_ratio).toString() );
+		//console.log("Calc Y: " + (touch_y * h_ratio).toString() )
+	})
+
+	socket.on('disconnect', function(data)
+	{
+		console.log("Client disconnected")
+		printToLog("Client disconnected");
 	})
 })
 
 html.listen(PORT, "0.0.0.0", function()
 	{
 		console.log("Running @ " + ip.address() + ":" + PORT.toString() );
+		printToLog("Running @ " + ip.address() + ":" + PORT.toString() );
 	});
 
 console.log("CTRL + C TO EXIT OUT");

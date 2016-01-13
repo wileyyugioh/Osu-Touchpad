@@ -2,7 +2,7 @@
   "name": "osu!touchpad",
   "version": "0.0.1",
   "description": "Allows the use of tablet as a controller",
-  "main": "index.js",
+  "main": "interface/interface.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

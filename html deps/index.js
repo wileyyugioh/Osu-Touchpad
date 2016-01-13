@@ -1,3 +1,23 @@
+//for orientation
+
+var LANDSCAPE = "LANDSCAPE";
+var PORTRAIT = "PORTRAIT";
+var orientation;
+
+function getOrientation()
+{
+	var orientation = Math.abs(window.orientation);
+	//only works in ios
+	if (orientation == 90 || orientation == -90)
+	{
+		orientation = LANDSCAPE;
+	}
+	else
+	{
+		orientation = PORTRAIT;
+	}
+}
+
 //disables scroll?
 document.body.addEventListener('touchmove', function(event) {
     event.preventDefault();
@@ -38,6 +58,10 @@ socket.on('connect', function(ok)
 	})
 
 	socket.emit('verify', {});
+
+	//key is ORIENTATION
+	getOrientation();
+	socket.emit('ORIENTATION', {"orientation": orientation});
 
 	//key is SCREEN_DIMENSION
 	socket.emit('SCREEN_DIMENSION', {W: screen.width, H: screen.height})
