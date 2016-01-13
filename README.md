@@ -13,7 +13,9 @@ Extensively tested on an iPad air.
 #Installation
 ```
 npm install
-node Osu!Touchpad.js
+
+nw
+
 ```
 
 ##TODO
