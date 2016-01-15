@@ -15,20 +15,43 @@ var CSS_PATH = "/html deps/index.css"
 var HAMMER_PATH = "/lib/hammer.min.js";
 var HTML_JS_PATH = "/html deps/index.js";
 var PORT = 3000;
+//97, at least, on iPad Air
+//not just for ios?
 var iOS_Y_COMP = 97;
 var LANDSCAPE = "LANDSCAPE";
 var PORTRAIT = "PORTRAIT";
 var server_ip = "null";
+var Y_COMP_VALUES = {
+	"iPad" : {
+		"LANDSCAPE" : 97,
+		"PORTRAIT" : 97,
+	},
+
+	"iPhone" : {
+		"LANDSCAPE" : 43,
+		"PORTRAIT" : 64
+	}
+}
 
 //global
 var ua_data;
 //defaults landscape
 var orientation = LANDSCAPE;
+//ratios of client screen to server screen in pixels
+var w_ratio, h_ratio;
+//I <3 RobotJS!
+var screen_size = robot.getScreenSize();
+var OS_NAME, MODEL_NAME;
 
 var queue = [];
 function printToLog(data) {
 	queue.push(data);
 };
+
+printToLog("Found a server screen width of " + screen_size.width);
+printToLog("Found a server screen height of " + screen_size.height);
+
+
 
 module.exports = {
 	getQueue : function()
@@ -74,8 +97,6 @@ function commands(data)
 		}
 	}
 
-	console.log(help_str);
-
 	//I could have used case, but it's too late now. 
 	if(format[0] == "help")
 	{
@@ -83,6 +104,10 @@ function commands(data)
 	}
 	else if(format[0] == "setYComp")
 	{
+		if(format[1] == null)
+		{
+			return;
+		}
 		iOS_Y_COMP = format[1];
 	}
 	else if(format[0] == "getYComp")
@@ -91,6 +116,10 @@ function commands(data)
 	}
 	else if(format[0] == "setHeightMultiplier")
 	{
+		if(format[1] == null)
+		{
+			return;
+		}
 		h_ratio = format[1];
 	}
 	else if(format[0] == "getHeightMultiplier")
@@ -99,6 +128,10 @@ function commands(data)
 	}
 	else if(format[0] == "setWidthMultiplier")
 	{
+		if(format[1] == null)
+		{
+			return;
+		}
 		w_ratio = format[1];
 	}
 	else if(format[0] == "getWidthMultiplier")
@@ -107,7 +140,7 @@ function commands(data)
 	}
 	else
 	{
-		printToLog("Unknown command" + format[0]);
+		printToLog("Unknown command " + format[0]);
 		printHelp();
 	}
 
@@ -118,8 +151,11 @@ app.get('/', function(req, res)
 {
 	//lets get that header
 	ua_data = parser(req.headers['user-agent']);
-	console.log("OS: " + ua_data.os.name);
-	printToLog("OS: " + ua_data.os.name);
+	OS_NAME = ua_data.os.name;
+	console.log("OS: " + OS_NAME);
+	printToLog("OS Found: " + OS_NAME);
+	MODEL_NAME = ua_data.device.model;
+	printToLog("Model: " + MODEL_NAME);
 
 	//index.html
 	res.sendFile(path.join(__dirname + HTML_PATH) );
@@ -148,8 +184,6 @@ io.on('connection', function(socket)
 {
 	//client w and h unlikely to change
 	var client_w, client_h;
-	//ratios of client screen to server screen in pixels
-	var w_ratio, h_ratio;
 
 	console.log("A user connected");
 	printToLog("A user connected");
@@ -167,7 +201,7 @@ io.on('connection', function(socket)
 	socket.on('ORIENTATION', function(data)
 	{
 		var orient = Math.floor(data.orientation);
-		if(orient == 90 || orient == -90)
+		if(((orient == 90 || orient == -90) && OS_NAME == "iOS") || ((orient == 0 || orient == 180) && OS_NAME == "Android") )
 		{
 			orientation = LANDSCAPE;
 		}
@@ -183,12 +217,9 @@ io.on('connection', function(socket)
 	//key is SCREEN_DIMENSION
 	socket.on('SCREEN_DIMENSION', function(data)
 	{
+		//lets calculate what the proportional thing would be on the server's screen
 		client_w = data.W;
 		client_h = data.H;
-
-		//lets calculate what the proportional thing would be on the server's screen
-		//I <3 RobotJS!
-		var screen_size = robot.getScreenSize();
 
 		//tested on ios
 		//assumes portrait mode
@@ -223,9 +254,10 @@ io.on('connection', function(socket)
 		var touch_y = data.Y;
 
 		//iOS returns negative? coordinates which is strange.
-		if(ua_data.os.name == 'iOS')
+		if(OS_NAME == 'iOS')
 		{
-			touch_y += iOS_Y_COMP;
+			console.log("Y_COMP_VALUES." + MODEL_NAME + "." + orientation)
+			touch_y += eval("Y_COMP_VALUES." + MODEL_NAME + "." + orientation);
 		}
 
 		var move_x;
@@ -234,8 +266,8 @@ io.on('connection', function(socket)
 		move_x = touch_x * w_ratio;
 		move_y = touch_y * h_ratio;
 
-		//console.log("X: " + touch_x.toString() );
-		//console.log("Y: " + touch_y.toString() );
+		console.log("X: " + touch_x.toString() );
+		console.log("Y: " + touch_y.toString() );
 
 		//did I mention I <3 RobotJS?
 		robot.moveMouse(move_x, move_y);
