@@ -15,14 +15,28 @@ nw.js (also known as node-webkit)
 nw-builder
 
 #Installation
+
+Download the binaries at https://github.com/wileyyugioh/Osu-Touchpad/releases
+
+#Installation if building
 ```
 npm install
 
-nw
+cd node_modules/robotjs && nw-gyp configure --target=$(npm show nw version) && nw-gyp build && cd -
+
+or all in one:
+
+npm install && cd node_modules/robotjs && nw-gyp configure --target=$(npm show nw version) && nw-gyp build && cd -
+
+---
+
+
+type nw in root directory to run.
 
 ```
+##Installation on Windows 10
 
-also go use nw-builder to rebuild robot.js
+Windows 10 is a tricky bugger, so check out https://github.com/nwjs/nw.js/issues/4033 to get it working with Visual Studio 2015.
 
 ##TODO
 
