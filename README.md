@@ -7,16 +7,17 @@ If you are building, you have to compile ROBOTJS with nw-gyp. Also, check out th
 
 Extensively tested on an iPad air. 
 
-#Dependencies
+#Installation
+
+Download the binaries at https://github.com/wileyyugioh/Osu-Touchpad/releases
+
+#Dependencies for building
 
 npm
 
 nw.js (also known as node-webkit)
-nw-builder
 
-#Installation
-
-Download the binaries at https://github.com/wileyyugioh/Osu-Touchpad/releases
+nw-gyp
 
 #Installation if building
 ```
