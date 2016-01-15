@@ -32,6 +32,8 @@ ul {
 
 #console_get {
 	border: none;
+	padding-left: 1em;
+	outline-width: 0;
 }
 
 #Log

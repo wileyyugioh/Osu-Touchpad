@@ -1,4 +1,6 @@
 //This file is for nw.js version ONLY
+//For pure checkout the pure branch
+//PURE branch is most likely deprecated.
 
 //includes
 var app = require('express')();
@@ -15,12 +17,13 @@ var CSS_PATH = "/html deps/index.css"
 var HAMMER_PATH = "/lib/hammer.min.js";
 var HTML_JS_PATH = "/html deps/index.js";
 var PORT = 3000;
-//97, at least, on iPad Air
-//not just for ios?
+//default for 97, at least, on iPad Air
+//not just for ios? Needs more testing
 var iOS_Y_COMP = 97;
 var LANDSCAPE = "LANDSCAPE";
 var PORTRAIT = "PORTRAIT";
 var server_ip = "null";
+var pos_log = false;
 var Y_COMP_VALUES = {
 	"iPad" : {
 		"LANDSCAPE" : 97,
@@ -77,24 +80,30 @@ function commands(data)
 
 	var help_str = `Commands:
 
+
 		setHeightMultiplier: sets the height multiplier of the client screen to the server.
 		setWidthMultiplier: sets the width multiplier from the client screen to the server.
 
 		setYComp: sets Y compensation from top of screen.
 
+		posLogging [0] [1]: disables/enables printing of x and y touch coordinates. Takes in either 0 for false and 1 for true.
+
 		for every set, there is also a get which returns the value
 
 		---
 		help: prints help
+
 		`;
 
 	function printHelp()
 	{
-		var frmt = help_str.split(/[\n]+/);
+		var frmt = help_str.split(/[\n]/g);
 		for(var i = 0; i < frmt.length; i++)
 		{
-			printToLog(frmt[i]);
+			printToLog(frmt[i]+ "\n");
 		}
+
+		printToLog("---");
 	}
 
 	//I could have used case, but it's too late now. 
@@ -137,6 +146,10 @@ function commands(data)
 	else if(format[0] == "getWidthMultiplier")
 	{
 		printToLog(w_ratio);
+	}
+	else if(format[0] == "posLogging")
+	{
+		pos_log = (format[1] == 0) ? false : true;
 	}
 	else
 	{
@@ -256,7 +269,7 @@ io.on('connection', function(socket)
 		//iOS returns negative? coordinates which is strange.
 		if(OS_NAME == 'iOS')
 		{
-			console.log("Y_COMP_VALUES." + MODEL_NAME + "." + orientation)
+			//console.log("Y_COMP_VALUES." + MODEL_NAME + "." + orientation)
 			touch_y += eval("Y_COMP_VALUES." + MODEL_NAME + "." + orientation);
 		}
 
@@ -266,11 +279,22 @@ io.on('connection', function(socket)
 		move_x = touch_x * w_ratio;
 		move_y = touch_y * h_ratio;
 
-		console.log("X: " + touch_x.toString() );
-		console.log("Y: " + touch_y.toString() );
+		if(pos_log)
+		{
+			printToLog("X: " + touch_x.toString() );
+			printToLog("Y: " + touch_y.toString() );
+		}
+		//console.log("X: " + touch_x.toString() );
+		//console.log("Y: " + touch_y.toString() );
 
 		//did I mention I <3 RobotJS?
 		robot.moveMouse(move_x, move_y);
+
+		if(pos_log)
+		{
+			printToLog("Calc X: " + (touch_x * w_ratio).toString() );
+			printToLog("Calc Y: " + (touch_y * h_ratio).toString() );
+		}
 
 		//console.log("Calc X: " + (touch_x * w_ratio).toString() );
 		//console.log("Calc Y: " + (touch_y * h_ratio).toString() )

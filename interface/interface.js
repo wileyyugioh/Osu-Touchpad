@@ -2,14 +2,17 @@
 //requires qrcodejs
 var main = require('../Osu!Touchpad.js');
 
-//1 second
-var UPDATE = 1000;
+//1/4 second
+var UPDATE = 250;
 
 function printToLog(data) {
 	var log_list = document.getElementById("Log");
 	var entry = document.createElement("li");
 	entry.appendChild(document.createTextNode(data) );
 	log_list.appendChild(entry);
+
+	//scroll to bottom of page
+	window.scrollTo(0, document.body.scrollHeight);
 };
 
 //for console
