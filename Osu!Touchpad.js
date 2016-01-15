@@ -18,20 +18,35 @@ var PORT = 3000;
 var iOS_Y_COMP = 97;
 var LANDSCAPE = "LANDSCAPE";
 var PORTRAIT = "PORTRAIT";
+var server_ip = "null";
 
 //global
 var ua_data;
 //defaults landscape
 var orientation = LANDSCAPE;
-//ratios of client screen to server screen in pixels
-var w_ratio, h_ratio;
 
 var queue = [];
 function printToLog(data) {
 	queue.push(data);
 };
 
-var server_ip = "null";
+module.exports = {
+	getQueue : function()
+	{
+		var temp = queue;
+		queue = [];
+		return temp;
+	},
+	getIp : function()
+	{
+		return "http://" + server_ip;
+	},
+
+	setCommand : function(data)
+	{
+		commands(data);
+	}
+}
 
 function commands(data)
 {
@@ -98,24 +113,6 @@ function commands(data)
 
 }
 
-module.exports = {
-	getQueue : function()
-	{
-		var temp = queue;
-		queue = [];
-		return temp;
-	},
-	getIp : function()
-	{
-		return server_ip;
-	},
-
-	setCommand : function(data)
-	{
-		commands(data);
-	}
-}
-
 //lets load that html file
 app.get('/', function(req, res)
 {
@@ -151,6 +148,8 @@ io.on('connection', function(socket)
 {
 	//client w and h unlikely to change
 	var client_w, client_h;
+	//ratios of client screen to server screen in pixels
+	var w_ratio, h_ratio;
 
 	console.log("A user connected");
 	printToLog("A user connected");
@@ -220,6 +219,8 @@ io.on('connection', function(socket)
 	//Key is TOUCHPOS
 	socket.on('TOUCHPOS', function(data)
 	{
+		var touch_x = data.X;
+		var touch_y = data.Y;
 
 		//iOS returns negative? coordinates which is strange.
 		if(ua_data.os.name == 'iOS')
