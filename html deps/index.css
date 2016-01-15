@@ -2,18 +2,16 @@ html, body
 {
 	margin: 0;
 	height: 100%;
+	width: 100%;
 }
 
 html
 {
 	postion: fixed;
-	height:100%;
-	width:100%;
 }
 
 body
 {
-	height: 100%;
 	overflow: hidden;
 }
 
@@ -21,4 +19,18 @@ body
 {
 	background-color:#FFDEFF;
 	height: 100%;
+	display: table;
+	width: 100%;
+}
+
+#touchtext
+{
+	white-space: nowrap;
+	font-family: monospace;
+  	font-size: calc(100vw / .625 / 9);
+  	display: table-cell;
+  	text-align: center;
+  	vertical-align: middle;
+  	opacity: .4;
+  	font-family: Consolas, monaco, monospace;
 }

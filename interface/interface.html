@@ -2,10 +2,21 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="interface.css">
+		<script src="lib/qrcode.min.js"></script>
 	</head>
 	<body>
+		<div id="qrcode_container">
+			<div id="qr_head">Scan to connect</div>
+			<div id="qrcode"></div>
+		</div>
+		<a id="log_head"> Log </a>
 		<ul id="Log">
 		</ul>
+		<div id="console">
+			<form onsubmit="return false" id="console_form">
+				<input id="console_get" autocomplete="off" placeholder="Console">
+			</form>
+		</div>
 	</body>
 		<script src="interface.js"></script>
 </html>
