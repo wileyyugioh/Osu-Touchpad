@@ -2,11 +2,8 @@
 
 A tablet emulator for mobile devices.
 
-#NOTE:
-This is the master branch of the repo. I plan to shift over to nw.js. Checkout the branch 'pure' if you want to have pure node. The branch may not be maintained in the future.
-
-#NOTE B:
-You may have to compile ROBOTJS. Also, check out the dependencies it requires. https://github.com/octalmage/robotjs
+#NOTE A:
+If you are building, you have to compile ROBOTJS with nw-gyp. Also, check out the dependencies it requires. https://github.com/octalmage/robotjs
 
 Extensively tested on an iPad air. 
 
@@ -28,12 +25,18 @@ nw
 also go use nw-builder to rebuild robot.js
 
 ##TODO
-video documentation!
-more devices!
-nicer packaging!
-add QR Code support!
-Figure out how to disable rubber banding on safari!
 
-License: MIT
+video documentation!
+
+more devices!
+
+~~nicer packaging!~~ DONE
+
+~~add QR Code support!~~ DONE
+
+~~Figure out how to disable rubber banding on safari!~~ DONE
+
+
+#License: MIT
 
 Don't steal credit or I'll sue.
