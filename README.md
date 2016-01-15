@@ -12,6 +12,10 @@ https://github.com/wileyyugioh/Osu-Touchpad/releases
 
 and run it
 
+#Installation
+
+Download the binaries at https://github.com/wileyyugioh/Osu-Touchpad/releases
+
 #Dependencies for building
 
 npm
