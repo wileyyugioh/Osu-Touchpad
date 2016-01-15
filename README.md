@@ -24,6 +24,14 @@ nw-gyp
 If you are building, you have to compile ROBOTJS with nw-gyp. Also, check out the dependencies it requires. https://github.com/octalmage/robotjs
 
 #Installation if building
+
+Windows:
+```
+./configure.bat
+```
+
+Or if you just plain like typing
+
 ```
 npm install
 
