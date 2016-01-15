@@ -1,22 +1,4 @@
 //This file is for nw.js version ONLY
-var LANDSCAPE = "LANDSCAPE";
-var PORTRAIT = "PORTRAIT";
-
-//defaults landscape
-var orientation = LANDSCAPE;
-var queue = [];
-function printToLog(data) {
-	queue.push(data);
-};
-
-module.exports = {
-	getQueue : function()
-				{
-					var temp = queue;
-					queue = [];
-					return temp;
-				}
-}
 
 //includes
 var app = require('express')();
@@ -31,13 +13,108 @@ var parser = require('ua-parser-js');
 var HTML_PATH = "/index.html";
 var CSS_PATH = "/html deps/index.css"
 var HAMMER_PATH = "/lib/hammer.min.js";
-var NOBOUNCE_PATH = "/lib/inobounce.min.js";
 var HTML_JS_PATH = "/html deps/index.js";
 var PORT = 3000;
 var iOS_Y_COMP = 97;
+var LANDSCAPE = "LANDSCAPE";
+var PORTRAIT = "PORTRAIT";
 
 //global
 var ua_data;
+//defaults landscape
+var orientation = LANDSCAPE;
+//ratios of client screen to server screen in pixels
+var w_ratio, h_ratio;
+
+var queue = [];
+function printToLog(data) {
+	queue.push(data);
+};
+
+var server_ip = "null";
+
+function commands(data)
+{
+	var format = data.split(/[ ]+/);
+
+	var help_str = `Commands:
+
+		setHeightMultiplier: sets the height multiplier of the client screen to the server.
+		setWidthMultiplier: sets the width multiplier from the client screen to the server.
+
+		setYComp: sets Y compensation from top of screen.
+
+		for every set, there is also a get which returns the value
+
+		---
+		help: prints help
+		`;
+
+	function printHelp()
+	{
+		var frmt = help_str.split(/[\n]+/);
+		for(var i = 0; i < frmt.length; i++)
+		{
+			printToLog(frmt[i]);
+		}
+	}
+
+	console.log(help_str);
+
+	//I could have used case, but it's too late now. 
+	if(format[0] == "help")
+	{
+		printHelp();
+	}
+	else if(format[0] == "setYComp")
+	{
+		iOS_Y_COMP = format[1];
+	}
+	else if(format[0] == "getYComp")
+	{
+		printToLog(iOS_Y_COMP);
+	}
+	else if(format[0] == "setHeightMultiplier")
+	{
+		h_ratio = format[1];
+	}
+	else if(format[0] == "getHeightMultiplier")
+	{
+		printToLog(h_ratio);
+	}
+	else if(format[0] == "setWidthMultiplier")
+	{
+		w_ratio = format[1];
+	}
+	else if(format[0] == "getWidthMultiplier")
+	{
+		printToLog(w_ratio);
+	}
+	else
+	{
+		printToLog("Unknown command" + format[0]);
+		printHelp();
+	}
+
+}
+
+module.exports = {
+	getQueue : function()
+	{
+		var temp = queue;
+		queue = [];
+		return temp;
+	},
+	getIp : function()
+	{
+		return server_ip;
+	},
+
+	setCommand : function(data)
+	{
+		commands(data);
+	}
+}
 
 //lets load that html file
 app.get('/', function(req, res)
@@ -75,7 +152,6 @@ io.on('connection', function(socket)
 	//client w and h unlikely to change
 	var client_w, client_h;
 
-	var w_ratio, h_ratio;
 	console.log("A user connected");
 	printToLog("A user connected");
 
@@ -144,8 +220,6 @@ io.on('connection', function(socket)
 	//Key is TOUCHPOS
 	socket.on('TOUCHPOS', function(data)
 	{
-		var touch_x = data.X;
-		var touch_y = data.Y;
 
 		//iOS returns negative? coordinates which is strange.
 		if(ua_data.os.name == 'iOS')
@@ -178,8 +252,9 @@ io.on('connection', function(socket)
 
 html.listen(PORT, "0.0.0.0", function()
 	{
-		console.log("Running @ " + ip.address() + ":" + PORT.toString() );
-		printToLog("Running @ " + ip.address() + ":" + PORT.toString() );
+		server_ip = ip.address() + ":" + PORT.toString();
+		console.log("Running @ " + server_ip);
+		printToLog("Running @ " + server_ip);
 	});
 
 console.log("CTRL + C TO EXIT OUT");

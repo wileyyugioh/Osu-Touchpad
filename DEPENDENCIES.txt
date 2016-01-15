@@ -1,6 +1,12 @@
 Node.js
+
 Express
 ua-parser.js
 socket.io
+robot.js
 ip
+
+hammer.js
+qrcodejs
+
 nw.js
