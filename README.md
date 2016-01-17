@@ -31,22 +31,13 @@ If you are building, you have to compile ROBOTJS with nw-gyp. Also, check out th
 
 Windows:
 ```
-./configure.bat
+./compile.bat
 ```
 
-Or if you just plain like typing
-
+*nix:
 ```
-npm install
-
-cd node_modules/robotjs && nw-gyp configure --target=$(npm show nw version) && nw-gyp build && cd -
-
-or all in one:
-
-npm install && cd node_modules/robotjs && nw-gyp configure --target=$(npm show nw version) && nw-gyp build && cd -
-
----
-
+./compile.sh
+```
 
 type nw in root directory to run.
 

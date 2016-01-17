@@ -43,13 +43,13 @@ GOTO loop
 	IF "%switch%"=="arch" (
 		set "arch=%1"
 		set "TRUE="
-		IF NOT %arch% == "ia64" set TRUE=1
+		IF NOT %arch% == "x64" set TRUE=1
 		IF NOT %arch% == "ia32" set TRUE=1
 
 		IF NOT defined TRUE (
 			set "string_list = %arch% "is not a valid architecure" "
 			ECHO %string_list%
-			ECHO "Valid options are 'ia32' and 'ia64'"
+			ECHO "Valid options are 'ia32' and 'x64'"
 		EXIT /B
 		)
 	)
@@ -73,19 +73,19 @@ IF NOT "%arch%"=="no" GOTO archtrue
 
 IF NOT "%python%"=="no" GOTO pytrue
 
-call nw-gyp rebuild --target=%version%
+call nw-gyp clean configure build --target=%version%
 GOTO end
 
 :archtrue
 	IF NOT "%python%"=="no" GOTO bothtrue
-	call nw-gyp rebuild --target=%version% --arch=%arch%
+	call nw-gyp clean configure build --target=%version% --arch=%arch%
 	GOTO end
 
 :pytrue
-	call nw-gyp rebuild --target=%version% --python=%python%
+	call nw-gyp clean configure build --target=%version% --python=%python%
 	GOTO end
 :bothtrue
-	nw-gyp rebuild --target=%version% --arch=%arch% --python=%python%
+	nw-gyp clean configure build --target=%version% --arch=%arch% --python=%python%
 	GOTO end
 :end
 	echo end
