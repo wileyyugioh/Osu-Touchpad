@@ -35,7 +35,12 @@ var Y_COMP_VALUES = {
 
 	"iPhone" : {
 		"LANDSCAPE" : 43,
-		"PORTRAIT" : 64
+		"PORTRAIT" : 64,
+	},
+
+	"Android" : {
+		"LANDSCAPE" : 80,
+		"PORTRAIT" : 81,
 	}
 }
 
@@ -285,7 +290,7 @@ io.on('connection', function(socket)
 
 		//tested on ios
 		//assumes portrait mode
-		if(orientation == PORTRAIT)
+		if((orientation == PORTRAIT && OS_NAME == "iOS") || (OS_NAME == "Android") )
 		{
 			w_ratio = (screen_size.width / client_w);
 			h_ratio = (screen_size.height / client_h);
@@ -320,6 +325,11 @@ io.on('connection', function(socket)
 		{
 			//console.log("Y_COMP_VALUES." + MODEL_NAME + "." + orientation)
 			touch_y += eval("Y_COMP_VALUES." + MODEL_NAME + "." + orientation);
+		}
+		else if((OS_NAME == "Android") && (auto_y_pos != true) && (iOS_Y_COMP == 0) )
+		{
+			//specifically for android chrome only
+			touch_y += eval("Y_COMP_VALUES." + OS_NAME + "." + orientation);
 		}
 		else
 		{

@@ -25,11 +25,17 @@ Connect to the ip address in a browser or scan the qr code.
 
 Enjoy!
 
+##Guarantee support
+Supports:
+	iOS: Safari
+	Android: Chrome
+	All others are not officially tested. Check out below for set up.
+
 ##Fixing configs
 
 iPad and iPhone should work out of the box, as does some Android.
 
-How some browsers work is that the y coordinate equals zero at the bottom of the url bar.
+How some browsers work is that the y coordinate equals zero at the bottom of the url bar, and we need to find out where exactly is that y coordinate. 
 
 This can be compensated for by typing startAutoYPos into the console while connected, and scroll the highest you can go.
 
@@ -98,6 +104,10 @@ npm install
 cd node_modules/robotjs
 
 nw-gyp rebuild --target=$(npm show nw version)
+
+for windows:
+mw-gyp rebuild --target=NW_VERSION
+where NW_VERSION is the version returned by 'npm show nw version'
 ```
 
 ##Building on Windows 10
@@ -106,7 +116,7 @@ Windows 10 is a tricky bugger, so check out https://github.com/nwjs/nw.js/issues
 
 Then compile robotjs with:
 ```
-nw-gyp rebuild --msvs_version=2015 --target=$(npm show nw version)
+nw-gyp rebuild --msvs_version=2015 --target=NW_VERSION
 ```
 
 ##TODO
