@@ -41,7 +41,6 @@ Windows:
 
 type nw in root directory to run.
 
-```
 ##Installation on Windows 10
 
 Windows 10 is a tricky bugger, so check out https://github.com/nwjs/nw.js/issues/4033 to get it working with Visual Studio 2015.
