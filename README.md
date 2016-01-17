@@ -31,7 +31,7 @@ iPad and iPhone should work out of the box, as does some Android.
 
 How some browsers work is that the y coordinate equals zero at the bottom of the url bar.
 
-This can be set by typing startAutoYPos into the console while connected, and scroll the highest you can go.
+This can be compensated for by typing startAutoYPos into the console while connected, and scroll the highest you can go.
 
 After you feel enough data has been collected, type endAutoYPos to stop collection.
 
@@ -57,7 +57,7 @@ Make sure that the program is going through your firewall. Also make sure your d
 
 ##The cursor goes off the screen!
 
-Just run startAutoYPos as seen above and save the settings. It should automatically fix the problem for you.
+Just run startAutoYPos as seen above in Fixing Configs and save the settings. It should automatically fix the problem for you.
 
 ##Something totally different and strange!
 
