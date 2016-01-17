@@ -16,6 +16,29 @@ and run it
 
 Download the binaries at https://github.com/wileyyugioh/Osu-Touchpad/releases
 
+#Usage
+Run the application/exe/nw
+
+An ip address should appear and a qr code like
+```
+Running @ 192.168.29.10:3000
+```
+
+Connect to the ip address in a default browser or scan the qr code.
+
+Enjoy!
+
+##Fixing configs
+
+iPad and iPhone should work out of the box, as does some Android.
+
+How some browsers work is that the y coordinate equals zero at the bottom of the url bar.
+
+This can be set by typing startAutoYPos into the console while connected, and scroll the highest you can go.
+
+After you feel enough data has been collected, type endAutoYPos to stop collection.
+
+
 #Dependencies for building
 
 npm

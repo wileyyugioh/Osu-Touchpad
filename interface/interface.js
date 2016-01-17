@@ -19,6 +19,23 @@ function printToLog(data) {
 document.getElementById("console_form").addEventListener("submit", function()
 	{
 		var in_text = document.getElementById("console_get");
+
+		switch(in_text.value)
+		{
+			case "clear":
+				var log_list = document.getElementById("Log");
+				while(log_list.firstChild)
+				{
+					log_list.removeChild(log_list.firstChild);
+				}
+				flag = true;
+				in_text.value=""
+				return;
+			default:
+				break;
+		}
+
+
 		main.setCommand(in_text.value);
 		printToLog("> " + in_text.value);
 		in_text.value = "";
