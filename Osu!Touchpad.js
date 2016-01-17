@@ -10,16 +10,19 @@ var io = require('socket.io')(html);
 var robot = require('robotjs');
 var ip = require('ip');
 var parser = require('ua-parser-js');
+var fs = require('fs');
 
 //constants
 var HTML_PATH = "/index.html";
 var CSS_PATH = "/html deps/index.css"
 var HAMMER_PATH = "/lib/hammer.min.js";
 var HTML_JS_PATH = "/html deps/index.js";
+var SETTING_NAME = "/Osu!Touchpad_settings.json"
+var SETTING_PATH = __dirname + SETTING_NAME;
 var PORT = 3000;
-//default for 97, at least, on iPad Air
-//not just for ios? Needs more testing
-var iOS_Y_COMP = 97;
+
+//later sets by settings or autoYPos
+var iOS_Y_COMP = 0;
 var LANDSCAPE = "LANDSCAPE";
 var PORTRAIT = "PORTRAIT";
 var server_ip = "null";
@@ -45,6 +48,12 @@ var w_ratio, h_ratio;
 //I <3 RobotJS!
 var screen_size = robot.getScreenSize();
 var OS_NAME, MODEL_NAME;
+var auto_y_pos = false;
+var auto_y_pos_val = 0;
+
+var setting_data = {
+	Y_COMP : 0,
+}
 
 var queue = [];
 function printToLog(data) {
@@ -53,7 +62,6 @@ function printToLog(data) {
 
 printToLog("Found a server screen width of " + screen_size.width);
 printToLog("Found a server screen height of " + screen_size.height);
-
 
 
 module.exports = {
@@ -78,27 +86,32 @@ function commands(data)
 {
 	var format = data.split(/[ ]+/);
 
-	var help_str = `Commands:
-		setHeightMultiplier: sets the height multiplier of the client screen to the server.
-		setWidthMultiplier: sets the width multiplier from the client screen to the server.
-		setYComp: sets Y compensation from top of screen.
-		posLogging [0] [1]: disables/enables printing of x and y touch coordinates. Takes in either 0 for false and 1 for true.
-		for every set, there is also a get which returns the value
-		---
-		help: prints help
-		clear: clears screen
-
-		`;
+	var help_str = `
+Commands:
+	setHeightMultiplier: sets the height multiplier of the client screen to the server.
+	setWidthMultiplier: sets the width multiplier from the client screen to the server.
+	setYComp: sets Y compensation from top of screen.
+	posLogging [0] [1]: disables/enables printing of x and y touch coordinates. Takes in either 0 for false and 1 for true.
+	loadSettings: loads settings
+	startAutoYPos: Starts collection to calibrate screen. Touch in the middle of the screen and scroll as high as you can while staying on the screen.
+	stopAutoYPos: Ends collection to calibrate screen.
+	for every set, there is also a get which returns the value
+	help: prints help
+	clear: clears the log
+`;
 
 	function printHelp()
 	{
-		var frmt = help_str.replace(/\t/g, '').split(/(\n)/g);
+		var frmt = help_str.replace(/(\t\t)/g, '').split(/(\n)/g);
+
 		for(var i = 0; i < frmt.length; i++)
 		{
-			printToLog(frmt[i]+ "\n");
+			if(frmt[i] == '')
+			{
+				continue;
+			}
+			printToLog(frmt[i]);
 		}
-
-		printToLog("---");
 	}
 
 	//I could have used case, but it's too late now. 
@@ -146,12 +159,53 @@ function commands(data)
 	{
 		pos_log = (format[1] == 0) ? false : true;
 	}
+	else if(format[0] == "loadSettings")
+	{
+		//lets load settings
+		fs.readFile(SETTING_PATH, function(err, data)
+		{
+			if(err)
+			{
+				printToLog("No settings file has been saved yet!");
+			}
+			printToLog("Loading saved settings");
+			setting_data = JSON.parse(data);
+			printToLog("Y_COMP is now " + setting_data.Y_COMP);
+			iOS_Y_COMP = setting_data.Y_COMP;
+		})
+	}
+	else if(format[0] == "saveSettings")
+	{
+		setting_data.Y_COMP = iOS_Y_COMP;
+
+		printToLog("Saving settings");
+		//write to save file
+		fs.writeFile(SETTING_PATH, JSON.stringify(setting_data), function(err)
+		{
+			if(err)
+			{
+				console.log("Failed to save settings");
+				printToLog("Failed to save settings");
+				console.log(err.message);
+			}	
+		});
+	}
+	else if(format[0] == "startAutoYPos")
+	{
+		auto_y_pos = true;
+		printToLog("Move your finger as high as you can go, into the url bar!")
+		printToLog("Type 'stopAutoYPos' to end collection");
+	}
+	else if(format[0] == "stopAutoYPos")
+	{
+		auto_y_pos = false;
+		iOS_Y_COMP = Math.abs(auto_y_pos_val);
+	}
 	else
 	{
 		printToLog("Unknown command " + format[0]);
 		printHelp();
 	}
-
 }
 
 //lets load that html file
@@ -209,7 +263,7 @@ io.on('connection', function(socket)
 	socket.on('ORIENTATION', function(data)
 	{
 		var orient = Math.floor(data.orientation);
-		if(((orient == 90 || orient == -90) && OS_NAME == "iOS") || ((orient == 0 || orient == 180) && OS_NAME == "Android") )
+		if(orient == 90 || orient == -90)
 		{
 			orientation = LANDSCAPE;
 		}
@@ -262,10 +316,14 @@ io.on('connection', function(socket)
 		var touch_y = data.Y;
 
 		//iOS returns negative? coordinates which is strange.
-		if(OS_NAME == 'iOS')
+		if((OS_NAME == 'iOS') && (auto_y_pos != true) && (iOS_Y_COMP == 0) )
 		{
 			//console.log("Y_COMP_VALUES." + MODEL_NAME + "." + orientation)
 			touch_y += eval("Y_COMP_VALUES." + MODEL_NAME + "." + orientation);
+		}
+		else
+		{
+			touch_y += iOS_Y_COMP;
 		}
 
 		var move_x;
@@ -278,6 +336,15 @@ io.on('connection', function(socket)
 		{
 			printToLog("X: " + touch_x.toString() );
 			printToLog("Y: " + touch_y.toString() );
+		}
+
+		if(auto_y_pos)
+		{
+			if(auto_y_pos_val > touch_y)
+			{
+				auto_y_pos_val = touch_y;
+				printToLog("Found minimum " + auto_y_pos_val);
+			}
 		}
 		//console.log("X: " + touch_x.toString() );
 		//console.log("Y: " + touch_y.toString() );
@@ -306,7 +373,6 @@ html.listen(PORT, "0.0.0.0", function()
 	{
 		server_ip = ip.address() + ":" + PORT.toString();
 		console.log("Running @ " + server_ip);
-		printToLog("Running @ " + server_ip);
 	});
 
 console.log("CTRL + C TO EXIT OUT");
