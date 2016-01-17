@@ -25,10 +25,14 @@ Connect to the ip address in a browser or scan the qr code.
 
 Enjoy!
 
-##Guarantee support
+##Guaranteed support
+
 Supports:
+
 	iOS: Safari
+
 	Android: Chrome
+
 	All others are not officially tested. Check out below for set up.
 
 ##Fixing configs
