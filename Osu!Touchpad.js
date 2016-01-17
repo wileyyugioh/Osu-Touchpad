@@ -167,19 +167,12 @@ Commands:
 		{
 			if(err)
 			{
-				//make a json file
-				fs.writeFile(SETTING_PATH, JSON.stringify(setting_data), function(err)
-				{
-					if(err)
-					{
-						console.log("Failed to save settings");
-						printToLog("Failed to save settings");
-						console.log(err.message);
-					}
-				});
+				printToLog("No settings file has been saved yet!");
 			}
-		printToLog("Loading saved settings");
-		setting_data = data;
+			printToLog("Loading saved settings");
+			setting_data = JSON.parse(data);
+			printToLog("Y_COMP is now " + setting_data.Y_COMP);
+			iOS_Y_COMP = setting_data.Y_COMP;
 		})
 	}
 	else if(format[0] == "saveSettings")
@@ -207,7 +200,7 @@ Commands:
 	else if(format[0] == "stopAutoYPos")
 	{
 		auto_y_pos = false;
-		iOS_Y_COMP = auto_y_pos_val;
+		iOS_Y_COMP = Math.abs(auto_y_pos_val);
 	}
 	else
 	{
@@ -324,7 +317,7 @@ io.on('connection', function(socket)
 		var touch_y = data.Y;
 
 		//iOS returns negative? coordinates which is strange.
-		if((OS_NAME == 'iOS') && (auto_y_pos != true) )
+		if((OS_NAME == 'iOS') && (auto_y_pos != true) && (iOS_Y_COMP == 0) )
 		{
 			//console.log("Y_COMP_VALUES." + MODEL_NAME + "." + orientation)
 			touch_y += eval("Y_COMP_VALUES." + MODEL_NAME + "." + orientation);
@@ -350,8 +343,8 @@ io.on('connection', function(socket)
 		{
 			if(auto_y_pos_val > touch_y)
 			{
-				auto_y_pos = touch_y;
-				printToLog("Found minimum " + auto_y_pos);
+				auto_y_pos_val = touch_y;
+				printToLog("Found minimum " + auto_y_pos_val);
 			}
 		}
 		//console.log("X: " + touch_x.toString() );
@@ -381,7 +374,6 @@ html.listen(PORT, "0.0.0.0", function()
 	{
 		server_ip = ip.address() + ":" + PORT.toString();
 		console.log("Running @ " + server_ip);
-		printToLog("Running @ " + server_ip);
 	});
 
 console.log("CTRL + C TO EXIT OUT");
