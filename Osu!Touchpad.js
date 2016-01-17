@@ -79,25 +79,20 @@ function commands(data)
 	var format = data.split(/[ ]+/);
 
 	var help_str = `Commands:
-
-
 		setHeightMultiplier: sets the height multiplier of the client screen to the server.
 		setWidthMultiplier: sets the width multiplier from the client screen to the server.
-
 		setYComp: sets Y compensation from top of screen.
-
 		posLogging [0] [1]: disables/enables printing of x and y touch coordinates. Takes in either 0 for false and 1 for true.
-
 		for every set, there is also a get which returns the value
-
 		---
 		help: prints help
+		clear: clears screen
 
 		`;
 
 	function printHelp()
 	{
-		var frmt = help_str.split(/[\n]/g);
+		var frmt = help_str.replace(/\t/g, '').split(/(\n)/g);
 		for(var i = 0; i < frmt.length; i++)
 		{
 			printToLog(frmt[i]+ "\n");

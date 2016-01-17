@@ -1,9 +1,14 @@
 body {
 	font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+	font-size: .75em;
 }
 
 ul {
 	list-style-type: none;
+}
+
+li {
+	height: 1.25em;
 }
 
 #qrcode_container {
