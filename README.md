@@ -41,9 +41,26 @@ Windows:
 
 type nw in root directory to run.
 
-##Installation on Windows 10
+##The long way
+
+Sometimes you want to run the specific commands, and that is okay
+
+```
+npm install
+
+cd node_modules/robotjs
+
+nw-gyp rebuild --target=$(npm show nw version)
+```
+
+##Building on Windows 10
 
 Windows 10 is a tricky bugger, so check out https://github.com/nwjs/nw.js/issues/4033 to get it working with Visual Studio 2015.
+
+Then compile robotjs with:
+```
+mw-gyp rebuild --msvs_version=2015 --target=$(npm show nw version)
+```
 
 ##TODO
 
