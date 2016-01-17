@@ -12,9 +12,6 @@ https://github.com/wileyyugioh/Osu-Touchpad/releases
 
 and run it
 
-#Installation
-
-Download the binaries at https://github.com/wileyyugioh/Osu-Touchpad/releases
 
 #Usage
 Run the application/exe/nw
