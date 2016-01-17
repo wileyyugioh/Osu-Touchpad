@@ -1,6 +1,6 @@
 {
   "name": "osu!touchpad",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Allows the use of tablet as a controller",
   "main": "interface/interface.html",
   "scripts": {
