@@ -19,12 +19,9 @@ Download the binaries at https://github.com/wileyyugioh/Osu-Touchpad/releases
 #Usage
 Run the application/exe/nw
 
-An ip address should appear and a qr code like
-```
-Running @ 192.168.29.10:3000
-```
+An ip address should appear and a qr code.
 
-Connect to the ip address in a default browser or scan the qr code.
+Connect to the ip address in a browser or scan the qr code.
 
 Enjoy!
 
@@ -38,6 +35,33 @@ This can be set by typing startAutoYPos into the console while connected, and sc
 
 After you feel enough data has been collected, type endAutoYPos to stop collection.
 
+##Saving Settings
+
+If constantly typing startAutoYPos is annoying, you can save the settings!
+
+Type into the console
+```
+saveSettings
+```
+
+to save them and to load the settings type
+```
+loadSettings
+```
+
+#Troubleshooting
+
+##I can't connect to my pc!
+
+Make sure that the program is going through your firewall. Also make sure your device and the pc is connected to the same network.
+
+##The cursor goes off the screen!
+
+Just run startAutoYPos as seen above and save the settings. It should automatically fix the problem for you.
+
+##Something totally different and strange!
+
+If you are truely stumped on how to do something, fill out an issue, and I'll take a look into it as soon as possible. 
 
 #Dependencies for building
 
@@ -82,14 +106,14 @@ Windows 10 is a tricky bugger, so check out https://github.com/nwjs/nw.js/issues
 
 Then compile robotjs with:
 ```
-mw-gyp rebuild --msvs_version=2015 --target=$(npm show nw version)
+nw-gyp rebuild --msvs_version=2015 --target=$(npm show nw version)
 ```
 
 ##TODO
 
 video documentation!
 
-test more devices!
+~~test more devices!~~ startAutoYPos is a lazy fix for this
 
 ~~nicer packaging!~~ DONE
 
