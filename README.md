@@ -40,7 +40,7 @@ How some browsers work is that the y coordinate equals zero at the bottom of the
 
 This can be compensated for by typing startAutoYPos into the console while connected, and scroll the highest you can go.
 
-After you feel enough data has been collected, type endAutoYPos to stop collection.
+After you feel enough data has been collected, type stopAutoYPos to stop collection.
 
 ##Saving Settings
 
