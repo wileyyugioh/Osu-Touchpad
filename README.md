@@ -23,6 +23,7 @@ Connect to the ip address in a browser or scan the qr code.
 Enjoy!
 
 A video by /u/pop102 showing it in action!
+
 [![Video Showcase](http://img.youtube.com/vi/ye4IDklYUPM/0.jpg)](http://www.youtube.com/watch?v=ye4IDklYUPM)
 
 ##Guaranteed support
